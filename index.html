@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>BarberIndia - Reservar Cita</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #111;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ff9800;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #ff9800;
+      font-size: 24px;
+    }
+
+    .support {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .support span {
+      margin-left: 8px;
+      color: #ff9800;
+    }
+
+    main {
+      padding: 30px;
+      max-width: 500px;
+      margin: auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+
+    input {
+      background: #222;
+      color: white;
+    }
+
+    button {
+      background: #ff9800;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background: #ffa726;
+    }
+
+    .status {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .occupied {
+      color: red;
+    }
+
+    .free {
+      color: #00e676;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>BarberIndia 💈</h1>
+  <div class="support">
+    📞 <span>*</span>
+  </div>
+</header>
+
+<main>
+  <h2>Reservar cita</h2>
+
+  <label>Nombre del cliente</label>
+  <input type="text" id="name" placeholder="Tu nombre">
+
+  <label>Fecha</label>
+  <input type="date" id="date" min="2024-01-01" max="2030-12-31">
+
+  <label>Hora</label>
+  <input type="time" id="time" step="1800">
+
+  <button onclick="reserve()">Reservar cita</button>
+
+  <div class="status" id="status"></div>
+</main>
+
+<script>
+  function reserve() {
+    const name = document.getElementById("name").value.trim();
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const status = document.getElementById("status");
+
+    if (!name || !date || !time) {
+      status.textContent = "⚠️ Completa todos los campos, loco";
+      status.className = "status occupied";
+      return;
+    }
+
+    const key = date + "_" + time;
+    let bookings = JSON.parse(localStorage.getItem("barberindia")) || {};
+
+    if (bookings[key]) {
+      status.textContent = "❌ Esa hora ya está OCUPADA, hermano";
+      status.className = "status occupied";
+      return;
+    }
+
+    bookings[key] = {
+      name: name,
+      date: date,
+      time: time
+    };
+
+    localStorage.setItem("barberindia", JSON.stringify(bookings));
+
+    status.textContent = "✅ Cita reservada con éxito, crack 🔥";
+    status.className = "status free";
+
+    document.getElementById("name").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("time").value = "";
+  }
+</script>
+
+</body>
